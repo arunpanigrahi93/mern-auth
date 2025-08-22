@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
+import connectDB from "./config/mongodb.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -15,9 +16,14 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("Hello API ");
+  res.send("Hello API is working");
 });
 
-app.listen(port, () => {
-  console.log(`server running successfully on port ${port}`);
-});
+connectDB()
+  .then(() => {
+    console.log("DB Connected successfully");
+    app.listen(port, () => {
+      console.log(`server running successfully on port ${port}`);
+    });
+  })
+  .catch(() => console.log("DB not connected"));
