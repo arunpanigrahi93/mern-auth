@@ -50,3 +50,39 @@ export const register = async (req, res) => {
     res.send({ success: false, message: err.message });
   }
 };
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.json({ success: false, message: "Fill the required fields" });
+  }
+
+  try {
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.json({ success: false, message: "Invalid email id" });
+    }
+
+    const passwordDecode = await bcrypt.compare(password, user.password);
+    if (!passwordDecode) {
+      return res.json({ success: false, message: "Invalid password" });
+    }
+
+    const token = jwt.sign({ id: userModel._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      samesite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.json({ success: true, message: "user successfully login" });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};
