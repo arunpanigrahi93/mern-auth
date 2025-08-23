@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
+import transporter from "../config/nodemailer.js";
 
 /**
  * Register Controller
@@ -49,6 +50,17 @@ export const register = async (req, res) => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict", // Needed for cross-site cookies
       maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expiry (7 days)
     });
+
+    //send email conformation
+
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: "Welcome to ArunWebStack",
+      text: `welcome to ArunWebStack website. your account has been created with email id: ${email}`,
+    };
+
+    await transporter.sendMail(mailOptions);
 
     // Final response
     res.json({ success: true, message: "User registered successfully" });
