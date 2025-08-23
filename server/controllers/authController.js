@@ -122,3 +122,21 @@ export const logout = async (req, res) => {
     res.json({ success: false, message: err.message });
   }
 };
+
+export const users = async (req, res) => {
+  try {
+    const users = await userModel.find({});
+
+    if (users.length <= 0) {
+      res.json({ success: false, message: "no users found" });
+    } else {
+      res.json({
+        success: true,
+        message: "fetching users successfully",
+        users,
+      });
+    }
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};
