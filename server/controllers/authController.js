@@ -52,7 +52,6 @@ export const register = async (req, res) => {
     });
 
     //send email conformation
-
     const mailOptions = {
       from: process.env.SENDER_EMAIL,
       to: email,
