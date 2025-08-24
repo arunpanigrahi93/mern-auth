@@ -199,3 +199,53 @@ export const sendVerifyOtp = async (req, res) => {
     res.json({ success: false, message: err.message });
   }
 };
+
+/**
+ * Controller: verifyEmail
+ * Purpose: Verifies the OTP entered by the user, marks the account as verified if valid.
+ */
+export const verifyEmail = async (req, res) => {
+  // Extract userId and otp from request body
+  const { userId, otp } = req.body;
+
+  // Check if both userId and otp are provided, else return error
+  if (!userId || !otp) {
+    return res.json({ success: false, message: "Missing details" });
+  }
+
+  try {
+    // Find the user in the database using the provided userId
+    const user = await userModel.findById(userId);
+
+    // If user is not found in the database, return error
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    // Validate OTP: if it's empty or does not match the stored one
+    if (user.verifyOtp === "" || user.verifyOtp !== otp) {
+      return res.json({ success: false, message: "Invalid OTP" });
+    }
+
+    // Check if the OTP has expired by comparing expiry time with current time
+    if (user.verifyOtpExpireAt < Date.now()) {
+      return res.json({ success: false, message: "OTP expired" });
+    }
+
+    // If OTP is valid and not expired:
+    // 1. Mark the account as verified
+    // 2. Reset OTP fields to prevent reuse
+    user.isAccountVerified = true;
+    user.verifyOtp = "";
+    user.verifyOtpExpireAt = 0;
+
+    // Save the updated user data to the database
+    await user.save();
+
+    // Return success response after successful verification
+    res.json({ success: true, message: "Email verified successfully" });
+  } catch (err) {
+    // Catch any unexpected errors and return error response
+    res.json({ success: false, message: err.message });
+  }
+};
