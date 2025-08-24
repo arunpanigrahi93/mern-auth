@@ -151,3 +151,51 @@ export const users = async (req, res) => {
     res.json({ success: false, message: err.message });
   }
 };
+
+// send verification OTP to the User's Email
+
+/**
+ * sendVerifyOtp
+ * Controller function to send an account verification OTP to the user via email.
+ */
+export const sendVerifyOtp = async (req, res) => {
+  try {
+    // Extract userId from the request body
+    const { userId } = req.body;
+
+    // Find the user in the database by userId
+    const user = await userModel.findById(userId);
+
+    // If the account is already verified, stop and return a response
+    if (user.isAccountVerified) {
+      return res.json({ success: false, message: "Account already verified" });
+    }
+
+    // Generate a 6-digit OTP as a string
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+
+    // Save the OTP and set an expiration time (24 hours from now)
+    user.verifyOtp = otp;
+    user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
+
+    // Persist the updated user object in the database
+    await user.save();
+
+    // Prepare the email details
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL, // Sender email address (from env variable)
+      to: user.email, // Receiver's email (user)
+      subject: "Account verification OTP", // Email subject
+      text: `Your OTP is ${otp}. Verify your account using this OTP.`, // Email body
+    };
+
+    // Send the OTP email using configured transporter (e.g., Nodemailer)
+    await transporter.sendMail(mailOptions);
+
+    // Send success response back to client
+    res.json({ success: true, message: "Verification OTP Sent on email" });
+  } catch (err) {
+    // Handle errors gracefully and return error message
+    res.json({ success: false, message: err.message });
+  }
+};
