@@ -35,6 +35,13 @@ const Login = () => {
     }
   };
 
+  const handleSwitch = () => {
+    setIsSignUp(!isSignUp);
+    setName("");
+    setEmail("");
+    setPassword("");
+  };
+
   // 🔹 Decide based on mode
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent page reload
@@ -123,7 +130,7 @@ const Login = () => {
           {isSignUp ? "Already have an account?" : "Don’t have an account?"}{" "}
           <span
             className="text-blue-600 font-semibold cursor-pointer hover:underline"
-            onClick={() => setIsSignUp(!isSignUp)}
+            onClick={handleSwitch}
           >
             {isSignUp ? "Sign In" : "Register"}
           </span>
