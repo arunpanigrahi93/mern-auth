@@ -1,10 +1,49 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const Login = () => {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("arunpanigrahi95@gmail.com");
+  const [password, setPassword] = useState("arun@123");
   const [isSignUp, setIsSignUp] = useState(false);
+
+  // 🔹 Sign In Handler
+  const signinUser = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/auth/login",
+        { email, password },
+        { withCredentials: true }
+      );
+      console.log("Login success:", response.data);
+    } catch (err) {
+      console.error("Login failed:", err.message);
+    }
+  };
+
+  // 🔹 Sign Up Handler
+  const signupUser = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/auth/register",
+        { name, email, password },
+        { withCredentials: true }
+      );
+      console.log("Signup success:", response.data);
+    } catch (err) {
+      console.error("Signup failed:", err.message);
+    }
+  };
+
+  // 🔹 Decide based on mode
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // prevent page reload
+    if (isSignUp) {
+      await signupUser();
+    } else {
+      await signinUser();
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 animate-gradient-x">
@@ -14,7 +53,8 @@ const Login = () => {
           {isSignUp ? "Create Account" : "Login"}
         </h2>
 
-        <form className="space-y-5">
+        {/* 🔹 Form */}
+        <form className="space-y-5" onSubmit={handleSubmit}>
           {isSignUp && (
             <div>
               <label className="block text-left text-gray-700 font-medium mb-1">
@@ -26,6 +66,7 @@ const Login = () => {
                 onChange={(e) => setName(e.target.value)}
                 className="w-full px-4 py-2 bg-white/30 border border-white/40 rounded-lg placeholder-gray-500 text-gray-900 focus:ring-2 focus:ring-blue-300 focus:outline-none"
                 placeholder="Enter your name"
+                required
               />
             </div>
           )}
@@ -40,6 +81,7 @@ const Login = () => {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 bg-white/30 border border-white/40 rounded-lg placeholder-gray-500 text-gray-900 focus:ring-2 focus:ring-blue-300 focus:outline-none"
               placeholder="Enter your email"
+              required
             />
           </div>
 
@@ -53,6 +95,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 bg-white/30 border border-white/40 rounded-lg placeholder-gray-500 text-gray-900 focus:ring-2 focus:ring-blue-300 focus:outline-none"
               placeholder="Enter your password"
+              required
             />
           </div>
 
@@ -75,6 +118,7 @@ const Login = () => {
           </button>
         </form>
 
+        {/* Toggle */}
         <p className="mt-6 text-center text-gray-800">
           {isSignUp ? "Already have an account?" : "Don’t have an account?"}{" "}
           <span
