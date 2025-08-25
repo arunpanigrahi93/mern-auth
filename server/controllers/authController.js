@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 import transporter from "../config/nodemailer.js";
+import { response, text } from "express";
 
 /**
  * Register Controller
@@ -234,6 +235,104 @@ export const verifyEmail = async (req, res) => {
     await user.save();
 
     res.json({ success: true, message: "Email verified successfully" });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};
+
+//check if user is authenticated
+
+export const isAuthenticated = async (req, res) => {
+  try {
+    return res.json({ success: true, message: "Authenticated" });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};
+
+//send reset otp
+
+export const sendResetOtp = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.json({ success: false, message: "Email is required" });
+  }
+  try {
+    const user = await userModel.findOne({ email });
+
+    // ❌ Wrong check: you repeated `if (!email)` instead of checking `if (!user)`
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "User not found with this email",
+      });
+    }
+
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+
+    // ❌ Typo: `restOtp` → should be `resetOtp`
+    user.resetOtp = otp;
+    user.resetOtpExpireAt = Date.now() + 15 * 60 * 1000; // 15 min
+    await user.save();
+
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: "Password Reset OTP",
+      text: `Your OTP for resetting your password is ${otp}. Use this OTP to proceed with resetting your password.`,
+    };
+    await transporter.sendMail(mailOptions);
+
+    res.json({ success: true, message: "OTP sent to your email" });
+  } catch (err) {
+    // ❌ You used `response.json` instead of `res.json`
+    res.json({
+      success: false,
+      message: "Something went wrong",
+      error: err.message,
+    });
+  }
+};
+
+//reset password
+
+export const resetPassword = async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  // Validation
+  if (!email || !otp || !newPassword) {
+    return res.json({
+      success: false,
+      message: "Email, OTP, and new password are required",
+    });
+  }
+
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    // OTP validation
+    if (!user.resetOtp || user.resetOtp !== otp) {
+      return res.json({ success: false, message: "Invalid OTP" });
+    }
+
+    // Expiry check
+    if (user.resetOtpExpireAt < Date.now()) {
+      return res.json({ success: false, message: "OTP expired" });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.resetOtp = "";
+    user.resetOtpExpireAt = 0;
+
+    await user.save(); // ✅ Don't forget to save changes
+
+    res.json({ success: true, message: "Password updated successfully" });
   } catch (err) {
     res.json({ success: false, message: err.message });
   }
