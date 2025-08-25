@@ -11,7 +11,7 @@ const Login = () => {
   const signinUser = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/auth/login",
+        `${import.meta.env.VITE_SERVER_URL}/login`,
         { email, password },
         { withCredentials: true }
       );
@@ -21,11 +21,11 @@ const Login = () => {
     }
   };
 
-  // 🔹 Sign Up Handler
+  // Sign Up API
   const signupUser = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/auth/register",
+        `${import.meta.env.VITE_SERVER_URL}/register`,
         { name, email, password },
         { withCredentials: true }
       );
