@@ -7,16 +7,9 @@ const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen overflow-hidden bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 animate-gradient-x">
-      {/* Soft floating blobs for glassy background */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-        <div className="absolute w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div className="absolute top-40 left-40 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-80 left-20 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
-      </div>
-
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 animate-gradient-x">
       {/* Glassmorphism Box */}
-      <div className="relative w-full max-w-md p-8 bg-white/20 backdrop-blur-2xl border border-white/30 rounded-2xl shadow-2xl animate-fade-in">
+      <div className="relative w-full max-w-md p-8 bg-white/20 backdrop-blur-2xl border border-white/30 rounded-2xl shadow-2xl animate-fade-in mt-24">
         <h2 className="text-3xl font-semibold text-center text-gray-900 drop-shadow-sm mb-6">
           {isSignUp ? "Create Account" : "Login"}
         </h2>

@@ -1,19 +1,25 @@
 import React from "react";
-import { assets } from "../assets/assets";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
-  const navigate = useNavigate();
+  const location = useLocation();
+
   return (
-    <div className="w-full flex justify-between items-center p-4 sm:p-6 sm:px-24 absolute top-0">
-      <img src={assets.logo} alt="logo" className="w-28 sm:w-32" />
-      <button
-        onClick={() => navigate("/login")}
-        className="flex items-center gap-2 border border-gray-500 rounded-full px-6 py-2 text-gray-800 hover:bg-gray-100 transition-all cursor-pointer"
-      >
-        Login <img src={assets.arrow_icon} alt="" />
-      </button>
-    </div>
+    <nav className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <Link to="/" className="text-gray-700 hover:text-blue-600">
+          <h1 className="text-xl font-bold text-blue-600">MyApp</h1>
+        </Link>
+        <div className="space-x-6">
+          {/* Show Login button only if NOT already on /login */}
+          {location.pathname !== "/login" && (
+            <Link to="/login" className="text-gray-700 hover:text-blue-600">
+              Login
+            </Link>
+          )}
+        </div>
+      </div>
+    </nav>
   );
 };
 
