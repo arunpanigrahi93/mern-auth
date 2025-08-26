@@ -15,6 +15,7 @@ export const getUserData = async (req, res) => {
     }
 
     // Send back selected user details (not exposing sensitive info)
+    res.send(user);
     res.json({
       success: true,
       getUserData: {

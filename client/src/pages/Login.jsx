@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addUser } from "../../redux/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [name, setName] = useState("");
@@ -7,15 +10,20 @@ const Login = () => {
   const [password, setPassword] = useState("arun@123");
   const [isSignUp, setIsSignUp] = useState(false);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   // Sign In API
   const signinUser = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/login`,
+        `${import.meta.env.VITE_SERVER_URL}/auth/login`,
         { email, password },
         { withCredentials: true }
       );
       console.log("Login success:", response.data);
+      dispatch(addUser(response.data));
+      navigate("/");
     } catch (err) {
       console.error("Login failed:", err.message);
     }
@@ -25,7 +33,7 @@ const Login = () => {
   const signupUser = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/register`,
+        `${import.meta.env.VITE_SERVER_URL}/auth/register`,
         { name, email, password },
         { withCredentials: true }
       );
