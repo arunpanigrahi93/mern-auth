@@ -2,14 +2,17 @@ import React, { useEffect } from "react";
 import Navbar from "./Navbar";
 import { Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../../redux/userSlice";
 
 const Body = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const userData = useSelector((store) => store.user);
+
   const fetchUser = async () => {
+    if (!userData) return;
     try {
       const user = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/user/profile`,
