@@ -3,7 +3,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../redux/userSlice";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
 const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("arunpanigrahi95@gmail.com");
@@ -21,15 +21,15 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
-      console.log("Login success:", response.data);
       dispatch(addUser(response.data));
-      navigate("/");
+      toast.success("Login successful 🎉");
+      navigate("/"); // redirect to home
     } catch (err) {
+      toast.error("Login failed ❌");
       console.error("Login failed:", err.message);
     }
   };
 
-  // Sign Up API
   const signupUser = async () => {
     try {
       const response = await axios.post(
@@ -37,8 +37,11 @@ const Login = () => {
         { name, email, password },
         { withCredentials: true }
       );
-      console.log("Signup success:", response.data);
+      toast.success("Registration successful 🎉 Please login now.");
+      setIsSignUp(false); // switch to login form
+      navigate("/login"); // redirect to login
     } catch (err) {
+      toast.error("Signup failed ❌");
       console.error("Signup failed:", err.message);
     }
   };
