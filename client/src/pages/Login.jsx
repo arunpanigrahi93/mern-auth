@@ -7,7 +7,7 @@ const Login = () => {
   const [password, setPassword] = useState("arun@123");
   const [isSignUp, setIsSignUp] = useState(false);
 
-  // 🔹 Sign In Handler
+  // Sign In API
   const signinUser = async () => {
     try {
       const response = await axios.post(
