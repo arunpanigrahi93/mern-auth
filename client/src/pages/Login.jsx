@@ -130,6 +130,7 @@ const Login = () => {
               <button
                 type="button"
                 className="text-sm text-blue-600 hover:underline cursor-pointer"
+                onClick={() => navigate("/reset-password")}
               >
                 Forgot Password?
               </button>
