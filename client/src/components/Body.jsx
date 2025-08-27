@@ -9,23 +9,23 @@ const Body = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const fetchUser = async () => {
-  //   try {
-  //     const user = await axios.get(
-  //       `${import.meta.env.VITE_SERVER_URL}/user/profile`,
-  //       { withCredentials: true }
-  //     );
-  //     console.log(user);
-  //     dispatch(addUser(user.data));
-  //   } catch (err) {
-  //     navigate("/login");
-  //     console.log(err.message);
-  //   }
-  // };
+  const fetchUser = async () => {
+    try {
+      const user = await axios.get(
+        `${import.meta.env.VITE_SERVER_URL}/user/profile`,
+        { withCredentials: true }
+      );
+      console.log(user);
+      dispatch(addUser(user.data));
+    } catch (err) {
+      navigate("/login");
+      console.log(err.message);
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchUser();
-  // }, []);
+  useEffect(() => {
+    fetchUser();
+  }, []);
   return (
     <div>
       <Navbar />

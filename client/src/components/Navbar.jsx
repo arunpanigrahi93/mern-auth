@@ -20,7 +20,7 @@ const Navbar = () => {
         {},
         { withCredentials: true }
       );
-      dispatch(removeUser(user));
+      dispatch(removeUser());
       toast.success("Logged out successfully 👋");
       navigate("/login");
     } catch (err) {

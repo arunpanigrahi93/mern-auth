@@ -13,7 +13,7 @@ const Header = () => {
         className="w-36 h-36 rounded-full mb-6"
       />
       <h1 className="flex items-center gap-2 text-xl sm:text-3xl font-medium mb-2">
-        Hi {user ? user.name : <h1>Loading...</h1>}
+        Hi {user ? user.name : <span>Loading...</span>}
         <img src={assets.hand_wave} alt="" className="w-8 aspect-square" />
       </h1>
       <h2 className="text-3xl sm:text-5xl font-semibold mb-4">
