@@ -78,39 +78,37 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
-  // Ensure fields are provided
   if (!email || !password) {
     return res.json({ success: false, message: "Fill the required fields" });
   }
 
   try {
-    // Find user by email
     const user = await userModel.findOne({ email });
     if (!user) {
       return res.json({ success: false, message: "Invalid email id" });
     }
 
-    // Compare given password with hashed password in DB
     const passwordDecode = await bcrypt.compare(password, user.password);
     if (!passwordDecode) {
       return res.json({ success: false, message: "Invalid password" });
     }
 
-    // Generate JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
 
-    // Set JWT in cookie
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    res.send(user);
 
-    res.json({ success: true, message: "User successfully logged in" });
+    res.json({
+      success: true,
+      message: "Login successful",
+      user: sanitizeUser(user),
+    });
   } catch (err) {
     res.json({ success: false, message: err.message });
   }
@@ -141,14 +139,13 @@ export const users = async (req, res) => {
   try {
     const users = await userModel.find({});
     if (users.length <= 0) {
-      res.json({ success: false, message: "No users found" });
-    } else {
-      res.json({
-        success: true,
-        message: "Fetched users successfully",
-        users,
-      });
+      return res.json({ success: false, message: "No users found" });
     }
+    return res.json({
+      success: true,
+      message: "Fetched users successfully",
+      users,
+    });
   } catch (err) {
     res.json({ success: false, message: err.message });
   }

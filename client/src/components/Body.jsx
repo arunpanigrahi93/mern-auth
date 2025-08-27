@@ -3,32 +3,29 @@ import Navbar from "./Navbar";
 import { Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser } from "../../redux/userSlice";
+import { addUser } from "../redux/userSlice";
 
 const Body = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const userData = useSelector((store) => store.user);
+  // const fetchUser = async () => {
+  //   try {
+  //     const user = await axios.get(
+  //       `${import.meta.env.VITE_SERVER_URL}/user/profile`,
+  //       { withCredentials: true }
+  //     );
+  //     console.log(user);
+  //     dispatch(addUser(user.data));
+  //   } catch (err) {
+  //     navigate("/login");
+  //     console.log(err.message);
+  //   }
+  // };
 
-  const fetchUser = async () => {
-    if (!userData) return;
-    try {
-      const user = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/user/profile`,
-        { withCredentials: true }
-      );
-      console.log(user);
-      dispatch(addUser(user.data));
-    } catch (err) {
-      navigate("/login");
-      console.log(err.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
+  // useEffect(() => {
+  //   fetchUser();
+  // }, []);
   return (
     <div>
       <Navbar />

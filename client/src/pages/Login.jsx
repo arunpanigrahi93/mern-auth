@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { addUser } from "../../redux/userSlice";
+import { addUser } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 const Login = () => {
@@ -16,14 +16,22 @@ const Login = () => {
   // Sign In API
   const signinUser = async () => {
     try {
-      const response = await axios.post(
+      // login (sets cookie/token in backend)
+      await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/auth/login`,
         { email, password },
         { withCredentials: true }
       );
-      dispatch(addUser(response.data));
+
+      // now fetch full profile
+      const userRes = await axios.get(
+        `${import.meta.env.VITE_SERVER_URL}/user/profile`,
+        { withCredentials: true }
+      );
+
+      dispatch(addUser(userRes.data)); // dispatch full user
       toast.success("Login successful 🎉");
-      navigate("/"); // redirect to home
+      navigate("/"); // only go home after user is in store
     } catch (err) {
       toast.error("Login failed ❌");
       console.error("Login failed:", err.message);
