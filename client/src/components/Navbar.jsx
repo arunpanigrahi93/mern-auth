@@ -28,9 +28,19 @@ const Navbar = () => {
     }
   };
 
-  const handleVerify = () => {
-    toast.info("Verification email sent 📧");
-    // 🔹 Call API here to trigger email verification
+  const handleVerify = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/auth/send-verify-otp`,
+        {}, // empty body since only cookies/session needed
+        { withCredentials: true }
+      );
+
+      navigate("/email-verify");
+      toast.info("Verification email sent 📧");
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   return (
