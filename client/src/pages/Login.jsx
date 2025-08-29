@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("arunpanigrahi95@gmail.com");
-  const [password, setPassword] = useState("arun@123");
+  const [password, setPassword] = useState("Arun@1234");
   const [isSignUp, setIsSignUp] = useState(false);
 
   const dispatch = useDispatch();
