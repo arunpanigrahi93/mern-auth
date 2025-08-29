@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
@@ -14,10 +15,10 @@ const ResetPassword = () => {
         { email },
         { withCredentials: true }
       );
-      console.log("OTP sent");
+      toast.success("OTP sent successfully ✅");
       setShow(true);
     } catch (err) {
-      console.error("Something went wrong:", err.message);
+      toast.error(err.response?.data?.message || "Failed to send OTP ❌");
     }
   };
 
@@ -28,9 +29,9 @@ const ResetPassword = () => {
         { email, otp, newPassword },
         { withCredentials: true }
       );
-      console.log("Password reset successful");
+      toast.success("Password reset successful 🎉");
     } catch (err) {
-      console.error("Something went wrong:", err.message);
+      toast.error(err.response?.data?.message || "Password reset failed ❌");
     }
   };
 
