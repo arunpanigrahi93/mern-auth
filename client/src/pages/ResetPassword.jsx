@@ -10,13 +10,18 @@ const ResetPassword = () => {
 
   const handleSubmit = async () => {
     try {
-      await axios.post(
+      const res = await axios.post(
         "http://localhost:4000/api/auth/send-reset-otp",
         { email },
         { withCredentials: true }
       );
-      toast.success("OTP sent successfully ✅");
-      setShow(true);
+
+      if (res.data.success) {
+        toast.success("OTP sent successfully ✅");
+        setShow(true);
+      } else {
+        toast.error(res.data.message || "Failed to send OTP ❌");
+      }
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to send OTP ❌");
     }
