@@ -8,6 +8,7 @@ const ResetPassword = () => {
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
+  //send reset otp handler
   const handleSubmit = async () => {
     try {
       const res = await axios.post(
@@ -27,6 +28,7 @@ const ResetPassword = () => {
     }
   };
 
+  //reset password handler
   const handleVerify = async () => {
     try {
       await axios.post(
