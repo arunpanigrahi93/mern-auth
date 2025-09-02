@@ -37,7 +37,7 @@ const Login = () => {
       console.error("Login failed:", err.message);
     }
   };
-
+  // sign up user
   const signupUser = async () => {
     try {
       const response = await axios.post(
