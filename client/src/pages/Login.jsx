@@ -40,7 +40,7 @@ const Login = () => {
   // sign up user
   const signupUser = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/auth/register`,
         { name, email, password },
         { withCredentials: true }
