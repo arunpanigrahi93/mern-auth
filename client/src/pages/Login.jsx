@@ -54,6 +54,7 @@ const Login = () => {
     }
   };
 
+  //switch signup /signin
   const handleSwitch = () => {
     setIsSignUp(!isSignUp);
     setName("");
