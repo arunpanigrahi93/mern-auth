@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("arunpanigrahi95@gmail.com");
